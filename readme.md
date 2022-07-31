@@ -1,4 +1,8 @@
 # NVDA development utilities.
+
+See the
+[spanish version here](/spanishReadme.md)
+
 This repo will contain all the utilities I've written or found in any place, to help with the development of NVDA's add-ons.
 
 ## config helper.
