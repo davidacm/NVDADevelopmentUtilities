@@ -26,9 +26,9 @@ from ._configHelper import *
 # y luego, hagamos la clase con la especificación.
 # esta clase debe heredar de la clase BaseConfig.
 class AppConfig(BaseConfig):
-	def __init__(self):
-		# indica el path de tu configuración al constructor del superclass.
-		super().__init__('beepKeyboard')
+	# establecer la ruta para guardar las configuraciones.
+	path  = 'beepKeyboard'
+	# También puedes establecer la ruta en el constructor, o al llamar con un segundo parámetro a la función registerConfig(AppConfig, "path")
 
 	# ahora, define tus propiedades / atributos / opciones de configuración.
 	# optConfig es una clase descriptiva y es la que hará toda la magia detrás.

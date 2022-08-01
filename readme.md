@@ -31,9 +31,9 @@ from ._configHelper import *
 # and then, let's do the class with the spec.
 # this class must inherit from the BaseConfig class.
 class AppConfig(BaseConfig):
-	def __init__(self):
-		# class the supperclass constructor with the path of your configuration.
-		super().__init__('beepKeyboard')
+	# set the path to save the add-on settings.
+	path  = 'beepKeyboard'
+	# you can set it in the constructor also, or setting a second parameter when calling registerConfig(AppConfig, "path")
 
 	# now, define your config properties / attributes / options.
 	# optConfig is a descriptor class and it will do all the magic behind.

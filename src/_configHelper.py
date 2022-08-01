@@ -1,12 +1,6 @@
 # NVDA configHelper.
 # Copyright (C) 2022 David CM
 
-""" this helps you to build the configurations for your add-ons easily, using class attributes, and python descriptors.
-by this way, your ide or text editor will be enabled to know the information about your config spec, and since the spec is just in one place, you will never do a mistake.
-Say goodbye those tedious config.conf['cat']['subcat']['option'] each time you need to access some config in your add-on.
-this does not support subcategories, if you need that, you can build a new class. It can be improved a lot, and I will do it when I need a better feature.
-"""
-
 import config
 
 def getConfigValue(path, optName):
@@ -34,12 +28,7 @@ def setConfigValue(path, optName, value):
 	ops[optName] = value
 
 
-def registerConfig(clsSpec):
-	""" this function registers your spec in the NVDA's config. It will instantiate the spec class, register it, and return the instance to you ready to be used.
-	@params:
-	clsSpec: the class with the config spec to be registered.
-	@return: the instance ready to be used to accessing and changing values in the configuration of your add-on.
-	"""
+def registerConfig(clsSpec, path=None):
 	AF = clsSpec()
 	config.conf.spec[AF.path[0]] = AF.createSpec()
 	AF.returnValue = True
@@ -85,9 +74,13 @@ class BaseConfig:
 	by default this value is False, to help to create the configuration spec first.
 	Set it to true after creating this spec.
 	"""
-
-	def __init__(self, path):
+	path = None
+	def __init__(self, path=None):
 		self.returnValue = False
+		if not path:
+			path = self.__class__.path
+		if not path:
+			raise Exception("Path for the config is not defined")
 		if isinstance(path, list):
 			self.path = path
 		else:
