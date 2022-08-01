@@ -29,7 +29,7 @@ def setConfigValue(path, optName, value):
 
 
 def registerConfig(clsSpec, path=None):
-	AF = clsSpec()
+	AF = clsSpec(path)
 	config.conf.spec[AF.path[0]] = AF.createSpec()
 	AF.returnValue = True
 	return AF
