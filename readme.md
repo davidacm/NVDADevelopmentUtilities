@@ -28,7 +28,7 @@ Note: when returnValue is set to false, get the value of a property will return 
 This is default False, but when you call the register function, it will set this value to True.
 So, you won't need to worry about this.
 
-See an example here:
+### Code example.
 
 ```
 # first, import the utility. The decorator and the register config function.
@@ -64,9 +64,15 @@ AF.disableBeepingOnPasswordFields  = True
 print("this should print True", AF.disableBeepingOnPasswordFields)
 ```
 
+### Real use cases:
+
+* [beepKeyboard](https://github.com/davidacm/beepkeyboard)
+* [SpeechHistoryExplorer](https://github.com/davidacm/SpeechHistoryExplorer)
+
 ## typeString.
 [Get the function code here](https://raw.githubusercontent.com/davidacm/NVDADevelopmentUtilities/master/src/typeString.py)
-this is a small piece of code to help you to write a string in a text input. Sometimes add-on developers copy a text in the clipboard, and then paste it. But in my opinion, that is not a good idea because it interferes with the clipboard of the user.
+
+This is a small piece of code to help you to write a string in a text input. Sometimes add-on developers copy a text in the clipboard, and then paste it. But in my opinion, that is not a good idea because it interferes with the clipboard of the user.
 
 I developed this function a long time ago. Currently I'm not using it, this might have some bugs. Use it, and if you encounter an issue and you can fix it, please let me know the solution.
 

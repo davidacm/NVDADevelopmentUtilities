@@ -24,7 +24,7 @@ Nota: cuando returnValue se establece en false, obtener el valor de una propieda
 Esto está por defecto en False, pero cuando se llama a la función register, se establecerá este valor a True.
 Por lo tanto, no tendrá que preocuparse por esto.
 
-Veamos un ejemplo:
+### ejemplo de código:
 
 ```
 # Primero, importemos la utilidad. El decorador y la función para registrar la configuración.
@@ -60,9 +60,15 @@ AF.disableBeepingOnPasswordFields  = True
 print("Esto debería imprimir True", AF.disableBeepingOnPasswordFields)
 ```
 
+### Casos reales de uso:
+
+* [beepKeyboard](https://github.com/davidacm/beepkeyboard)
+* [SpeechHistoryExplorer](https://github.com/davidacm/SpeechHistoryExplorer)
+
 ## typeString.
 [Encuentra el código de la función aquí](https://raw.githubusercontent.com/davidacm/NVDADevelopmentUtilities/master/src/typeString.py)
-este es un pequeño fragmento de código para ayudarte a escribir una cadena en una entrada de texto. A veces los desarrolladores de complementos copian un texto en el portapapeles, y luego lo pegan. Pero en mi opinión, eso no es una buena idea porque interfiere con el portapapeles del usuario.
+
+Este es un pequeño fragmento de código para ayudarte a escribir una cadena en una entrada de texto. A veces los desarrolladores de complementos copian un texto en el portapapeles, y luego lo pegan. Pero en mi opinión, eso no es una buena idea porque interfiere con el portapapeles del usuario.
 
 Desarrollé esta función hace mucho tiempo. Actualmente no la estoy usando, esto podría tener algunos errores. Úsalo, y si encuentras un problema y puedes arreglarlo, por favor hazme saber la solución.
 
