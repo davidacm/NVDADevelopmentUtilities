@@ -13,58 +13,55 @@ This is a small utility to deal with NVDA's settings in our add-ons.
 The philosophy here is that strings related to coding should only be written in a centralized place.
 Because IDE's usually can't help you to autocomplete inside a string, then you can make mistakes if you change just a letter. Remember that, for example a string as a key in a dict, is case sensitive.
 
-
 I really hate to write config.conf.['a1']['a2]['option'] each time I
 need to access, or set a value in the configuration.
 
 ### usage.
 
 This consist on a class for the specification and a very simple descriptor, to get and
-access the config values.
+access the config values. Don't worry, you don't need to use the descriptor directly, the class decorator will do all the stuff for you.
+
+There are many ways to use it, but the simplest way is by using the class decorator.
+
+Note: when returnValue is set to false, get the value of a property will return the config description.
+
+This is default False, but when you call the register function, it will set this value to True.
+So, you won't need to worry about this.
 
 See an example here:
 
 ```
-# first, import the utility.
-from ._configHelper import *
+# first, import the utility. The decorator and the register config function.
 
-# and then, let's do the class with the spec.
-# this class must inherit from the BaseConfig class.
-class AppConfig(BaseConfig):
-	# set the path to save the add-on settings.
-	path  = 'beepKeyboard'
-	# you can set it in the constructor also, or setting a second parameter when calling registerConfig(AppConfig, "path")
+from ._configHelper import configSpec, registerConfig
 
-	# now, define your config properties / attributes / options.
-	# optConfig is a descriptor class and it will do all the magic behind.
-	# OptConfig will take the name you declared here and will use it for the name of the config option.
-	# you just need to specify the description of the data.
-	# you can set a distinct name for the option if you want, but it isn't usually needed.
-	# if you need this anyway, just call OptConfig so:
-	# OptConfig("optionName", "data description")
-	# let'st start with the config deffinition.
-	beepUpperWithCapsLock = OptConfig('boolean(default=True)')
-	beepCharacterWithShift = OptConfig('boolean(default=False)')
-	beepToggleKeyChanges = OptConfig('boolean(default=False)')
-	announceToggleStatus = OptConfig('boolean(default=True)')
-	disableBeepingOnPasswordFields = OptConfig('boolean(default=True)')
-	ignoredCharactersForShift = OptConfig("string(default='\\x1b\\t\\b\\r ')")
-	beepForCharacters = OptConfig("string(default='')")
-	shiftedCharactersTone = OptConfig('int_list(default=list(6000,10,25))')
-	customCharactersTone = OptConfig('int_list(default=list(6000,10,25))')
-	capsLockUpperTone = OptConfig('int_list(default=list(3000,40,50))')
-	toggleOffTone = OptConfig('int_list(default=list(500,40,50))')
-	toggleOnTone = OptConfig('int_list(default=list(2000, 40, 50))')
-
-# now, we need to register the config specification and get an instance of the class to be used in our code.
+# now the class definition, with the decorator first.
+# this decorator will replace the attributes with a descriptor to manage accessing and updating values.
+@configSpec
+class AppConfig:
+	# the config path. Important to call it __path__ = ...
+	__path__ = 'beepKeyboard'
+	# now the definition of the settings. in form of name = 'desc'
+	beepUpperWithCapsLock = 'boolean(default=True)'
+	beepCharacterWithShift = 'boolean(default=False)'
+	beepToggleKeyChanges = 'boolean(default=False)'
+	announceToggleStatus = 'boolean(default=True)'
+	disableBeepingOnPasswordFields = 'boolean(default=True)'
+	ignoredCharactersForShift = "string(default='\\x1b\\t\\b\\r ')"
+	beepForCharacters = "string(default='')"
+	shiftedCharactersTone = 'int_list(default=list(6000,10,25))'
+	customCharactersTone = 'int_list(default=list(6000,10,25))'
+	capsLockUpperTone = 'int_list(default=list(3000,40,50))'
+	toggleOffTone = 'int_list(default=list(500,40,50))'
+	toggleOnTone = 'int_list(default=list(2000, 40, 50))'
 AF = registerConfig(AppConfig)
 
 # accessing an option:
-print("this should print False", af.disableBeepingOnPasswordFields)
+print("this should print False", AF.disableBeepingOnPasswordFields)
 # changing the value:
-af.disableBeepingOnPasswordFields  = True
+AF.disableBeepingOnPasswordFields  = True
 # let's see the new value.
-print("this should print True", af.disableBeepingOnPasswordFields)
+print("this should print True", AF.disableBeepingOnPasswordFields)
 ```
 
 ## typeString.

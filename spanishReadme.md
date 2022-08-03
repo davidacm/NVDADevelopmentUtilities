@@ -15,51 +15,49 @@ necesito acceder, o establecer un valor en la configuración.
 ### Uso.
 
 Esto consiste en una clase para la especificación y un descriptor muy simple, para obtener y
-acceder a los valores de la configuración.
+acceder a los valores de configuración. No te preocupes, no necesitas usar el descriptor directamente, el decorador de clase hará todo el trabajo por ti.
 
-Vea un ejemplo aquí:
+Hay muchas maneras de usarlo, pero la más sencilla es usar el decorador de clase.
+
+Nota: cuando returnValue se establece en false, obtener el valor de una propiedad devolverá la descripción de la configuración.
+
+Esto está por defecto en False, pero cuando se llama a la función register, se establecerá este valor a True.
+Por lo tanto, no tendrá que preocuparse por esto.
+
+Veamos un ejemplo:
 
 ```
-# primero, importa la utilidad.
-from ._configHelper import *
+# Primero, importemos la utilidad. El decorador y la función para registrar la configuración.
+from ._configHelper import configSpec, registerConfig
 
-# y luego, hagamos la clase con la especificación.
-# esta clase debe heredar de la clase BaseConfig.
-class AppConfig(BaseConfig):
-	# establecer la ruta para guardar las configuraciones.
-	path  = 'beepKeyboard'
-	# También puedes establecer la ruta en el constructor, o al llamar con un segundo parámetro a la función registerConfig(AppConfig, "path")
-
-	# ahora, define tus propiedades / atributos / opciones de configuración.
-	# optConfig es una clase descriptiva y es la que hará toda la magia detrás.
-	# OptConfig tomará el nombre que declaraste aquí y lo usará para el nombre de la opción de configuración.
-	# solo necesitas especificar la descripción de los datos.
-	# puedes establecer un nombre distinto para la opción si quieres, pero normalmente no es necesario.
-	# si usted necesita esto de todos modos, sólo llame a OptConfig así:
-	# OptConfig("NombreDeOpcion", "descripcion de datos")
-	# Hagamos la definición de la configuración. ¡Mira que fácil!
-	beepUpperWithCapsLock = OptConfig('boolean(default=True)')
-	beepCharacterWithShift = OptConfig('boolean(default=False)')
-	beepToggleKeyChanges = OptConfig('boolean(default=False)')
-	announceToggleStatus = OptConfig('boolean(default=True)')
-	disableBeepingOnPasswordFields = OptConfig('boolean(default=True)')
-	ignoredCharactersForShift = OptConfig("string(default='\x1b\t\b\\r ')")
-	beepForCharacters = OptConfig("string(default='')")
-	shiftedCharactersTone = OptConfig('int_list(default=list(6000,10,25))')
-	customCharactersTone = OptConfig('int_list(default=list(6000,10,25))')
-	capsLockUpperTone = OptConfig('int_list(default=list(3000,40,50))')
-	toggleOffTone = OptConfig('int_list(default=list(500,40,50))')
-	toggleOnTone = OptConfig('int_list(default=list(2000, 40, 50))')
-
-# ahora, necesitamos registrar la especificación de la configuración y obtener una instancia de la clase para ser utilizada en nuestro código.
+# Ahora, la declaración de la clase, con el decorador primero.
+# este decorador remplazará los atributos con un descriptor para manejar el acceso y la actualización de los valores de la configuración.
+@configSpec
+class AppConfig:
+	# definamos la ruta, muy importante que se llame __path__ = ...
+	__path__ = 'beepKeyboard'
+	# ahora, la declaración de cada configuración. En forma de nombre = 'descripción'
+	beepUpperWithCapsLock = 'boolean(default=True)'
+	beepCharacterWithShift = 'boolean(default=False)'
+	beepToggleKeyChanges = 'boolean(default=False)'
+	announceToggleStatus = 'boolean(default=True)'
+	disableBeepingOnPasswordFields = 'boolean(default=True)'
+	ignoredCharactersForShift = "string(default='\\x1b\\t\\b\\r ')"
+	beepForCharacters = "string(default='')"
+	shiftedCharactersTone = 'int_list(default=list(6000,10,25))'
+	customCharactersTone = 'int_list(default=list(6000,10,25))'
+	capsLockUpperTone = 'int_list(default=list(3000,40,50))'
+	toggleOffTone = 'int_list(default=list(500,40,50))'
+	toggleOnTone = 'int_list(default=list(2000, 40, 50))'
+# ahora registramos la descripción de la configuración que acabamos de hacer.
 AF = registerConfig(AppConfig)
 
-# Como acceder al valor de una opción:
-print("Esto debería iprimir False", af.disableBeepingOnPasswordFields)
-# cambiando el valor a True:
-af.disableBeepingOnPasswordFields = True
-# veamos el nuevo valor
-print("Esto debería iprimir True", af.disableBeepingOnPasswordFields)
+# accediendo al valor de una opción:
+print("Esto debería imprimir False", AF.disableBeepingOnPasswordFields)
+# Actualizando el valor:
+AF.disableBeepingOnPasswordFields  = True
+# Veamos el nuevo valor.
+print("Esto debería imprimir True", AF.disableBeepingOnPasswordFields)
 ```
 
 ## typeString.
