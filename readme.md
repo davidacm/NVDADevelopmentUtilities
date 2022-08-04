@@ -37,11 +37,14 @@ from ._configHelper import configSpec, registerConfig
 
 # now the class definition, with the decorator first.
 # this decorator will replace the attributes with a descriptor to manage accessing and updating values.
-@configSpec
+# you can specify the path config in the decorator or in the class. I prefer it in the decorator.
+# if you prefer to set it in the class, just add an attribute called __path__ inside the class, e.g.
+# __path__ = "..."
+# the path given in the decorator has a higher priority.
+
+@configSpec('beepKeyboard')
 class AppConfig:
-	# the config path. Important to call it __path__ = ...
-	__path__ = 'beepKeyboard'
-	# now the definition of the settings. in form of name = 'desc'
+	# the definition of the settings. in form of name = 'desc'
 	beepUpperWithCapsLock = 'boolean(default=True)'
 	beepCharacterWithShift = 'boolean(default=False)'
 	beepToggleKeyChanges = 'boolean(default=False)'

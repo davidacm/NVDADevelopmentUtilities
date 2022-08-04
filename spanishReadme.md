@@ -32,11 +32,14 @@ from ._configHelper import configSpec, registerConfig
 
 # Ahora, la declaración de la clase, con el decorador primero.
 # este decorador remplazará los atributos con un descriptor para manejar el acceso y la actualización de los valores de la configuración.
-@configSpec
+# puedes definir la ruta de la configuración en el decorador o en la clase.
+# yo la prefiero en el decorador. Si la quieres en la clase, debes definir un atributo dentro de la clase así:
+# __path__ = "..."
+# la ruta en el decorador tiene prioridad sobre la declarada dentro de la clase.
+
+@configSpec('beepKeyboard')
 class AppConfig:
-	# definamos la ruta, muy importante que se llame __path__ = ...
-	__path__ = 'beepKeyboard'
-	# ahora, la declaración de cada configuración. En forma de nombre = 'descripción'
+	# la declaración de cada configuración. En forma de nombre = 'descripción'
 	beepUpperWithCapsLock = 'boolean(default=True)'
 	beepCharacterWithShift = 'boolean(default=False)'
 	beepToggleKeyChanges = 'boolean(default=False)'
