@@ -19,12 +19,18 @@ acceder a los valores de configuración. No te preocupes, no necesitas usar el d
 
 Hay muchas maneras de usarlo, pero la más sencilla es usar el decorador de clase.
 
-Nota: cuando returnValue se establece en false, obtener el valor de una propiedad devolverá la descripción de la configuración.
+Para acceder a la especificación de configuración, accede a la propiedad de la clase que declaraste. La instancia accederá únicamente al valor actual de la configuración.
 
-Esto está por defecto en False, pero cuando se llama a la función register, se establecerá este valor a True.
-Por lo tanto, no tendrá que preocuparse por esto.
+Normalmente la especificación la escribirás en un string. Pero si tu configuración se comporta de forma un poco distinta a lo usual, puedes usar una tupla de valores para modificar el comportamiento de las configuraciones.
+Estos son los valores soportados actualmente si usas tuplas:
+
+1. String con la especificación de la opción.
+2. True para indicar que la configuración se debe generalizar, o false para indicar que debe ser específica para cada perfil de NVDA. Por defecto es false.
+3. (parámetro opcional) Una función de validación de tipos. Ya que NVDA no comprueba ni convierte tipos al acceder directamente al perfil general, puedes especificar una función para que valide de manera automática el valor de la opción. Esto tiene sentido únicamente si estableciste el segundo parámetro en True.
 
 ### ejemplo de código:
+
+Este ejemplo fue tomado del complemento [Beep Keyboard.](https://github.com/davidacm/beepKeyboard)
 
 ```
 # Primero, importemos la utilidad. El decorador y la función para registrar la configuración.
@@ -61,6 +67,19 @@ print("Esto debería imprimir False", AF.disableBeepingOnPasswordFields)
 AF.disableBeepingOnPasswordFields  = True
 # Veamos el nuevo valor.
 print("Esto debería imprimir True", AF.disableBeepingOnPasswordFields)
+```
+
+Beamos un ejemplo con configuraciones de perfil general. El ejemplo fue tomado del complemento [IBMTTS.](https://github.com/davidacm/NVDA-IBMTTS-Driver)
+
+```
+from ._configHelper import configSpec, registerConfig, boolValidator
+@configSpec("ibmeci")
+class _AppConfig:
+	dllName = ("string(default='eci.dll')", True)
+	TTSPath = ("string(default='ibmtts')", True)
+	# opcion de perfil general con validador (bool)
+	autoUpdate  = ('boolean(default=True)', True, boolValidator)
+appConfig = registerConfig(_AppConfig)
 ```
 
 ### Casos reales de uso:

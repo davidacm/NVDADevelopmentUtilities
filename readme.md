@@ -16,6 +16,7 @@ Because IDE's usually can't help you to autocomplete inside a string, then you c
 I really hate to write config.conf.['a1']['a2]['option'] each time I
 need to access, or set a value in the configuration.
 
+
 ### usage.
 
 This consist on a class for the specification and a very simple descriptor, to get and
@@ -23,12 +24,18 @@ access the config values. Don't worry, you don't need to use the descriptor dire
 
 There are many ways to use it, but the simplest way is by using the class decorator.
 
-Note: when returnValue is set to false, get the value of a property will return the config description.
+To access the configuration spec, access the property of the declared class. The instance will only access the current value of the setting and not the spec.
 
-This is default False, but when you call the register function, it will set this value to True.
-So, you won't need to worry about this.
+Usually the specification can be written in a string. But if your configuration behaves a little differently than usual, you can use a tuple of values to change the behavior of the configurations.
+These are the currently supported values when you use tuples:
+
+1. String specifying the option.
+2. True to indicate that the settings should be generalized for all profiles, or false to indicate that they should be specific to each NVDA profile. Default is false.
+3. (optional parameter) A type validation function. Since NVDA does not check or convert types when accessing the general profile directly, you can specify a function to automatically validate the option's value. This only makes sense if you set the second parameter to True.
 
 ### Code example.
+
+This example was taken from the [Beep Keyboard](https://github.com/davidacm/beepKeyboard) add-on.
 
 ```
 # first, import the utility. The decorator and the register config function.
@@ -65,6 +72,19 @@ print("this should print False", AF.disableBeepingOnPasswordFields)
 AF.disableBeepingOnPasswordFields  = True
 # let's see the new value.
 print("this should print True", AF.disableBeepingOnPasswordFields)
+```
+
+Let's see an example with options for the general profile only. This was taken from [IBMTTS](https://github.com/davidacm/NVDA-IBMTTS-Driver) add-on.
+
+```
+from ._configHelper import configSpec, registerConfig, boolValidator
+@configSpec("ibmeci")
+class _AppConfig:
+	dllName = ("string(default='eci.dll')", True)
+	TTSPath = ("string(default='ibmtts')", True)
+	# General profile option with a validator function for bools.
+	autoUpdate  = ('boolean(default=True)', True, boolValidator)
+appConfig = registerConfig(_AppConfig)
 ```
 
 ### Real use cases:
