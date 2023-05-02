@@ -86,6 +86,8 @@ appConfig = registerConfig(_AppConfig)
 
 * [beepKeyboard](https://github.com/davidacm/beepkeyboard)
 * [SpeechHistoryExplorer](https://github.com/davidacm/SpeechHistoryExplorer)
+* [IBMTTS](https://github.com/davidacm/NVDA-IBMTTS-Driver)
+* [Wake Speaker](https://github.com/davidacm/WakeSpeaker)
 
 ## typeString.
 [Encuentra el código de la función aquí](https://raw.githubusercontent.com/davidacm/NVDADevelopmentUtilities/master/src/typeString.py)
@@ -100,6 +102,36 @@ Simplemente llama a la función con la cadena que necesitas escribir. Por ejempl
 
 typeString("Hola, esto es una prueba")
 
+## "updateVersion.py". Utilidad para actualizar la versión de buildVars.py
+
+Este pequeño script no requiere módulos externos. Simplemente es un archivo python al que le debes pasar la versión a la cual deseas actualizar el archivo buildVars, utilizado por scons para empaquetar los complementos de NVDA.
+
+Por ejemplo:
+
+"python updateVersion.py 2023.5.2"
+
+Si el script reconoce un argumento pasado al script, lo identificará como la versión que deseas asignar.
+
+## "post-commit". Hook para actualizar la versión si olvidaste hacerlo.
+
+Esta idea nació porque siempre olvido actualizar buildVars.py, actualizar la versión de un add-on requiere actualizar lo mismo en muchas partes y no se me dan bien las tareas repetitivas.
+Solía actualizar la versión en un github workflow que utilizo para publicar releases automáticamente, pero no me gusta la idea de tener un buildVars desinscronizado con la última versión.
+
+Entonces, si no quieres complicarte con todo eso, deja que un hook lo haga por ti.
+Para poder hacerlo, se requiere del uso del script "updateVersion.py".
+
+### Funcionamiento:
+
+1. Pon el archivo "post-commit" dentro de la carpeta .git/hooks.
+2. Si vas a liberar una nueva versión, escribe en la primera línea del commit la versión de esta forma: "version 1.2.3". La versión debe estar compuesta por tres números, dado que es requisito para la tienda de complementos de NVDA.
+3. En el post commit, el hook analizará si tu commit posee en la primera línea un mensaje del tipo "version x.y.z". Si lo encuentra, verificará que "buildVars.py" coincida con la versión especificada.
+4. En caso de no coincidir, actualizará la versión usando updateVersion.py, agregará el archivo modificado al índice, y hará un commit --amend.
+5. Creará un tag con la versión especificada.
+
+El hook mostrará un mensaje por consola indicando que ha reconocido una indicación de versión, y el script de python también. Puedes revisar los mensajes de la consola si deseas estar seguro que todo ha ido bien.
+
+Si usas un github workflow para lanzar releases al subir un tag, solo te toca introducir "git push origin x.y.z".
+Si bien podrías agregar este último comando al hook, no lo considero buena idea. Pero puedes añadirlo tu si lo deseas. tal vez algún día lo haga.
 
 ## Notas:
 

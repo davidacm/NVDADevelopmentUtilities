@@ -91,6 +91,8 @@ appConfig = registerConfig(_AppConfig)
 
 * [beepKeyboard](https://github.com/davidacm/beepkeyboard)
 * [SpeechHistoryExplorer](https://github.com/davidacm/SpeechHistoryExplorer)
+* [IBMTTS](https://github.com/davidacm/NVDA-IBMTTS-Driver)
+* [Wake Speaker](https://github.com/davidacm/WakeSpeaker)
 
 ## typeString.
 [Get the function code here](https://raw.githubusercontent.com/davidacm/NVDADevelopmentUtilities/master/src/typeString.py)
@@ -105,6 +107,32 @@ Just call the function with the string that you need to type. For example:
 
 typeString("Hello, this is a test")
 
+## "updateVersion.py". Utility to update the version of buildVars.py
+
+This little script does not require any external modules. It's just a python file to update the version of the add-on in the "buildVars.py". Just pass the desired version, for example:
+"python updateVersion.py 2023.5.2"
+
+If the script recognizes an argument passed to the script, it will identify that as the version you want to assign.
+
+## "post-commit". Hook to update the version if you forgot to do it.
+
+This idea came about because I always forget to update buildVars.py.. Updating the version of an add-on requires updating the same thing in several parts and I'm not good at repetitive tasks.
+I used to update the version in a github workflow that I use to automatically launch new releases, but I don't like the idea of ​​having buildVars out of sync with the latest version.
+
+So if you don't want to mess with all that, let a hook do it for you.
+In order to do so, the use of the "updateVersion.py" script is required.
+
+### Usage.
+1. Put the file "post-commit" inside .git/hooks folder.
+2. If you are going to release a new version, write in the first line of the commit the version in this way: "version 1.2.3". The version must consist of three numbers, as it is a requirement for the NVDA Add-on Store.
+3. In the post commit stage, the hook will analyze if your commit has a message of the type "version x.y.z" in the first line. If it finds it, it will check that "buildVars.py" matches the specified version.
+3. If they don't match, it will update the version using updateVersion.py, add the modified file to the index, and do a commit --amend.
+4. It will create a tag with the specified version.
+
+The hook will display a console message to announce that it has recognized a version indication, and the python script will too. You can check the console messages if you want to make sure that everything went well.
+
+If you use a github workflow to push releases by uploading a tag, all you have to do is enter "git push origin x.y.z".
+While you could add this last command to the hook, I don't think it's a good idea. But you can add it if you want. maybe one day I will.
 
 ## Notes:
 
@@ -112,3 +140,5 @@ I usually work inside a folder called "nvda/addons", and each add-on is inside t
 Inside nvda folder, I have a clone of the source code of nvda, it would be "nvda/nvda".
 
 I mentioning it because so, you can understand the paths pre-configured in the ".code-workspace" file for vs code.
+
+See this information in [spanish here](https://github.com/davidacm/NVDADevelopmentUtilities/blob/main/spanishReadme.md)

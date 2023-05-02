@@ -1,0 +1,13 @@
+#!/bin/sh
+
+commit_msg=$(git log -1 --pretty=%B)
+if [[ "$commit_msg" =~ ^\s*version\ ([0-9]+(\.[0-9]+){2}) ]] && ! $(grep -q "\"addon_version\"\s*:\s*\"${BASH_REMATCH[1]}\"" buildVars.py); then
+  version_number="${BASH_REMATCH[1]}"
+  echo "A version instruction was detected in the comit message distinct to the version of buildVars.py. The file will be updated with the version detected: $version_number"
+  python updateVersion.py "$version_number"
+  wait
+  git add buildVars.py
+  git commit --amend --no-edit
+  wait
+  git tag "$version_number"
+fi
